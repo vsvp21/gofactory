@@ -1,4 +1,4 @@
-module github.com/vsvp21/gofactory/v1
+module github.com/vsvp21/gofactory
 
 go 1.21
 
