@@ -2,68 +2,10 @@
 
 Package to create factories for database testing in golang and gorm with ease
 
-**Make 5 models:**
-
-```go
-package main
-
-import "fmt"
-import "github.com/vsvp21/gofactory/v1"
-
-func main() {
-	orders := gofactory.Make[*models.Order](factory.Order, 5)
-
-	fmt.Println(orders)
-}
+**Installation**
+```shell
+go get github.com/vsvp21/gofactory
 ```
-
-**Make 5 models and override fields:**
-
-```go
-package main
-
-import "fmt"
-import "github.com/vsvp21/gofactory/v1"
-
-func main() {
-	overrideModel := &models.Order{Restaurant: &models.Restaurant{Name: "OVERRIDE"}}
-	orders := gofactory.MakeOverride[*models.Order](factory.Order, 1, overrideModel)
-
-	fmt.Println(orders)
-}
-```
-
-**Create 5 models in DB:**
-
-```go
-package main
-
-import "fmt"
-import "github.com/vsvp21/gofactory/v1"
-
-func main() {
-	orders := gofactory.Create[*models.Order](factory.Order, 5)
-
-	fmt.Println(orders)
-}
-```
-
-**Create 5 models in DB and override fields:**
-
-```go
-package main
-
-import "fmt"
-import "github.com/vsvp21/gofactory/v1"
-
-func main() {
-	overrideModel := &models.Order{Restaurant: &models.Restaurant{Name: "OVERRIDE"}}
-	orders := gofactory.CreateOverride[*models.Order](factory.Order, 1, overrideModel)
-
-	fmt.Println(orders)
-}
-```
-
 
 **How to create factory**
 
@@ -94,7 +36,7 @@ package models
 
 import (
 	"github.com/brianvoe/gofakeit/v6"
-	"github.com/vsvp21/gofactory/v1"
+	"github.com/vsvp21/gofactory"
 	"gorm.io/gorm"
 )
 
@@ -128,4 +70,88 @@ func OrderFactory() *Order {
 	}
 }
 
+```
+
+**Make 5 models:**
+
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/vsvp21/gofactory"
+)
+
+func main() {
+	orders := gofactory.Make[*models.Order](factory.Order, 5)
+
+	fmt.Println(orders)
+}
+```
+
+**Make 5 models and override fields:**
+
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/vsvp21/gofactory"
+)
+
+func main() {
+	overrideModel := &models.Order{Restaurant: &models.Restaurant{Name: "OVERRIDE"}}
+	orders := gofactory.MakeOverride[*models.Order](factory.Order, 1, overrideModel)
+
+	fmt.Println(orders)
+}
+```
+
+**Create 5 models in DB:**
+
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/vsvp21/gofactory"
+    "gorm.io/gorm"
+)
+
+func main() {
+	dsn := "host=localhost user=db_user password=secretsecret dbname=factory port=5432 sslmode=disable"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	orders := gofactory.Create[*models.Order](db, factory.Order, 5)
+
+	fmt.Println(orders)
+}
+```
+
+**Create 5 models in DB and override fields:**
+
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/vsvp21/gofactory"
+    "gorm.io/gorm"
+)
+
+func main() {
+	dsn := "host=localhost user=db_user password=secretsecret dbname=factory port=5432 sslmode=disable"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	overrideModel := &models.Order{Restaurant: &models.Restaurant{Name: "OVERRIDE"}}
+	orders := gofactory.CreateOverride[*models.Order](db, factory.Order, 1, overrideModel)
+
+	fmt.Println(orders)
+}
 ```
